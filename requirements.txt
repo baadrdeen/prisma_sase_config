@@ -1,5 +1,10 @@
 requests
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
 pandas
 jinja2
 PyYAML
 prisma_sase
+python
