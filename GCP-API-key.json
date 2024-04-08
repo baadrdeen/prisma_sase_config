@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "Your PROJECT_ID",
+  "private_key_id": "Your PRIVATE_KEY_ID",
+  "private_key": "Your PRIVATE_KEY",
+  "client_email": "Your CLIENT_EMAIL",
+  "client_id": "Your CLIENT_ID",
+  "auth_uri": "Your AUTH_URI",
+  "token_uri": "Your TOKEN_URI",
+  "auth_provider_x509_cert_url": "Your AUTH_PROVIDER_X509_CERT_URL",
+  "client_x509_cert_url": "Your CLIENT_X509_CERT_URL",
+  "universe_domain": "googleapis.com"
+}
