@@ -34,7 +34,7 @@ validate_branch_info:
     - echo "Validate Branch information for SITE_ID=${SITE_ID}" # Log message
     - python Validate_branch_info.py "$SITE_ID" # Run the validation script with SITE_ID
   only:
-    - dev # Only run this job for the dev branch
+    - main # Only run this job for the main branch
   environment:
     name: production # Set the environment
   artifacts:
@@ -49,7 +49,7 @@ generate_branch_config:
     - echo "Generating site template for SITE_ID=${SITE_ID}" # Log message
     - python Branch_Config_Maker.py "$SITE_ID" # Run the template maker script with SITE_ID
   only:
-    - dev # Only run this job for the dev branch
+    - main # Only run this job for the main branch
   environment:
     name: production # Set the environment
   artifacts:
@@ -82,7 +82,7 @@ deploy:
   environment:
     name: production # Set the environment
   only:
-    - dev # Only run this job for the dev branch
+    - main # Only run this job for the main branch
   when: manual # This job requires manual intervention to run
   needs:
     - validate_branch_info # Specify that this job needs the validate_branch_info job to run
