@@ -7,4 +7,3 @@ pandas
 jinja2
 PyYAML
 prisma_sase
-python
