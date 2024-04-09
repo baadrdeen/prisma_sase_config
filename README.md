@@ -4,7 +4,7 @@
 
 The Prisma SASE ConfigAutomation is a tool designed to streamline the management of Prisma SASE Cloud Controller (Strata Cloud Manager) configurations. It enables the export and import of configurations and templates, supporting continuous integration workflows for seamless updates and deployment of configurations.
 
-<img src="img/pipeline_overview.png" alt="Alt Text" width="1000">
+<img src="img/pipeline_overview.png" alt="Alt Text" width="1500">
 
 ## Features
 
