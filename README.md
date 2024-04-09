@@ -202,9 +202,9 @@ After setting up the Jinja2 template and updating the scripts with the correct m
 
 Trigger the pipeline manually from the GitLab UI by navigating to your project's CI/CD section and clicking "Run pipeline".
 
-#### Method 2: Trigger Pipeline Using Postman and GitLab API
+### Method 2: Trigger Pipeline Using Postman and GitLab API
 
-To trigger the pipeline using Postman:
+To trigger the pipeline using Postman and the GitLab API, follow these steps:
 
 1. Open Postman and create a new POST request.
 2. Set the URL to the GitLab API pipeline trigger endpoint:
@@ -213,8 +213,15 @@ To trigger the pipeline using Postman:
    ```
 3. In the Headers section, add your `PRIVATE-TOKEN` with the value of your GitLab API access token.
 4. In the Body section, set the request type to form-data and add the following keys and values:
-   - `ref`: The name of the branch you want to run the pipeline on.
-   - `token`: The token for the specific trigger you want to use.
+   - `token`: The token for the specific trigger you want to use. This should be placed in the body data of the request as form-data.
+   - `ref`: The name of the branch you want to run the pipeline on. This also goes in the body data as form-data.
+   - `variables[SITE_ID]`: Specify the site ID or branch that will be deployed. This key-value pair should be included in the body data as form-data.
 5. Send the request to trigger the pipeline.
 
-Remember to replace `<project-id>` with your actual project ID and provide the correct branch name and trigger token.
+Here's an example of how the body data should be configured in Postman:
+
+- Key: `token` | Value: `<your-trigger-token>`
+- Key: `ref` | Value: `<your-branch-name>`
+- Key: `variables[SITE_ID]` | Value: `<your-site-id>`
+
+Remember to replace `<project-id>`, `<your-trigger-token>`, `<your-branch-name>`, and `<your-site-id>` with your actual project details and desired values. This setup will trigger the CI/CD pipeline for the specified branch and pass the `SITE_ID` as a variable to the pipeline, which can be used for deployment.
