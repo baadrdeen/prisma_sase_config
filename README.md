@@ -1,8 +1,10 @@
-# Prisma SASE Configuration Utility
+# PrismaSASE-ConfigAutomation with GitLab CI/CD
 
 ## Overview
 
-The Prisma SASE Configuration Utility is a tool designed to streamline the management of Prisma SASE Cloud Controller configurations. It enables the export and import of configurations and templates, supporting continuous integration workflows for seamless updates and deployment of configurations.
+The Prisma SASE ConfigAutomation is a tool designed to streamline the management of Prisma SASE Cloud Controller (Strata Cloud Manager) configurations. It enables the export and import of configurations and templates, supporting continuous integration workflows for seamless updates and deployment of configurations.
+
+<img src="img/pipeline_overview.png" alt="Alt Text" width="500">
 
 ## Features
 
@@ -334,22 +336,26 @@ Remember to replace `<project-id>`, `<your-trigger-token>`, `<your-branch-name>`
 
 ## References
 
-For more information and further reading, please refer to the following resources:
+For additional information and further reading, refer to the following resources:
 
-- [Google API Reference](https://github.com/googleapis/google-api-python-client)
-  - This reference provides detailed information about the Google API libraries and how to interact with Google services programmatically.
+- [Google API Reference](https://developers.google.com/api-client-library)
+  - Detailed information on Google API libraries and programmatic interaction with Google services.
 
-- [Prisma SASE SDK Reference](https://github.com/PaloAltoNetworks/prisma-sase-sdk-python)
-  - The Prisma SASE SDK documentation offers comprehensive guides and API references to help developers integrate with the Prisma SASE platform.
+- [Prisma SASE SDK Reference](https://pan.dev/sase/docs/)
+  - Comprehensive guides and API references for integrating with the Prisma SASE platform.
 
-Ensure you review and understand the documentation provided by these resources to effectively utilize the APIs and SDKs in your project.
+- [GitLab CI/CD Documentation](https://docs.gitlab.com/ee/ci/)
+  - Official documentation for GitLab's continuous integration and deployment features, providing guidance on how to set up and configure CI/CD pipelines.
+
+Ensure to review these resources to effectively utilize the APIs, SDKs, and CI/CD practices in your project.
+
 
 
 ## Disclaimer
 
 - This script comes with no warranty or support. Use it at your own risk.
-- Double-check your configuration and it's recommended to run simulate mode before running the script in deploy mode.
-- Review the pipeline and understand the implications before making changes to your Prisma paltform.
+- Verify your configuration thoroughly, and it's recommended to execute the pipeline in a staging environment before deploying to production.
+- Review the pipeline and understand the implications before making changes to your Strata Cloud Manager.
 
 ## Author
 
