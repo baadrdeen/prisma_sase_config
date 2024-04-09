@@ -194,7 +194,7 @@ To update the `Branch_Config_Maker.py` script with the data mapping for your Jin
 
 By completing the data mapping in the `Branch_Config_Maker.py` script, you will enable the dynamic generation of YAML configuration files based on the site information provided in the JSON file. This allows for the creation of site-specific configurations using the Jinja2 template.
 
-### Step 4: Run the Pipeline
+## Run the Pipeline
 
 After setting up the Jinja2 template and updating the scripts with the correct mappings and validations, you can run the pipeline using one of the following methods:
 
