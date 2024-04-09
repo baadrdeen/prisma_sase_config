@@ -19,39 +19,99 @@ The Prisma SASE Configuration Utility is a tool designed to streamline the manag
 - Python version 2.7 or higher (up to 3.6 or higher).
 - Prisma SASE Python SDK version 5.6.1b2 or higher.
 
-## Installation
+## Setup
 
-### Via PIP:
+### Via pip:
+
+1. Clone this repository to your local machine:
 
 ```bash
-pip install prisma_sase_config
+$ git clone https://github.com/baadrdeen/prisma_sase_config.git
 ```
 
-### Via GitHub:
+2. Navigate to the project directory:
 
-1. Download the files to a local directory.
-2. Run the `pull_site.py` and `do_site.py` scripts manually.
+```bash
+$ cd prisma_sase_config
+```
+
+3. Install the required Python packages:
+
+```bash
+$ pip install -r requirements.txt
+```
+
+4. After install, pull_site/do_site scripts should be placed in the Python Scripts directory.
 
 ## Usage
 
-1. Use the Prisma SASE UI to configure a site and related objects. Note the site name.
+1. Use the Strata Cloud Manager  to configure a branch and related settings. Note the branch name.
 2. Extract the configuration with `pull_site`:
    ```bash
-   pull_site -S "MySite" --output MySite.yaml
+   $ python pull_site -S "MySiteName" --output MySiteName.yaml
    ```
 3. Edit the configuration file as needed.
 4. Apply the configuration with `do_site.py`:
    ```bash
-   do_site.py MySite.yml
-   ```
+   $ python do_site.py UK_RemoteBranch_settings.yml
 
-## Upgrade Considerations
-
-When upgrading the utility:
-
-1. Use `pip install --upgrade prisma_sase_config` to get the latest version.
-2. Re-run `pull_site` for your sites and compare the new YAML files with your existing configurations.
-3. Update your templates and configurations with any new attributes.
+         No Change for Site UK_RemoteBranch.
+      No Change for Waninterface UK_RemoteBranch-WAN_Link_1.
+      No Change for Waninterface UK_RemoteBranch-WAN_Link_2.
+      No Change for Spoke Cluster UK_RemoteBranch.
+      No Change for Site NAT Localprefix mapping for Localprefix Vm Client .
+      Updated Device ID Config 1712691016045 (Etag 2 -> 2).
+      Element: Code is at correct version 5.6.13-b3.
+      No Change for Element UK_RemoteBranch-1.
+      WARNING: Cannot use configuration for interface 3, it is set as a parent for 3.20.
+         No Change for Interface 3.1.
+         No Change for Interface 3.10.
+         No Change for Interface 3.2.
+         No Change for Interface 3.20.
+         No Change for Interface 1.
+         No Change for Interface 2.
+         No Change for Interface controller 1.
+      WARNING: Cannot use configuration for interface 3, it is set as a parent for 3.20.
+         No Change for Interface 4.
+         No Change for Interface 5.
+         No Change for Interface 6.
+         No Change for Interface 7.
+         No Change for Interface 8.
+         No Change for Interface 9.
+         No Change for Spoke HA in Element UK_RemoteBranch-1.
+         No Change for BGP Global Config 1712576424183025045.
+         No Change for Staticroute LAN_Subnet 1.
+         No Change for Staticroute LAN_Subnet 2.
+         No Change for NTP 1712051337068007745.
+         No Change for Toolkit 1712051344428012945.
+         No Change for Application Probe default-probe-configuration-16626015845.
+      Element: Code is at correct version 5.6.13-b3.
+      No Change for Element UK_RemoteBranch-2.
+      WARNING: Cannot use configuration for interface 3, it is set as a parent for 3.20.
+         No Change for Interface 3.1.
+         No Change for Interface 3.10.
+         No Change for Interface 3.2.
+         No Change for Interface 3.20.
+         No Change for Interface 1.
+         No Change for Interface 2.
+         No Change for Interface controller 1.
+      WARNING: Cannot use configuration for interface 3, it is set as a parent for 3.20.
+         No Change for Interface 4.
+         No Change for Interface 5.
+         No Change for Interface 6.
+         No Change for Interface 7.
+         No Change for Interface 8.
+         No Change for Interface 9.
+         No Change for Spoke HA in Element UK_RemoteBranch-2.
+         No Change for BGP Global Config 1712576685103013245.
+         No Change for Staticroute LAN_Subnet 1.
+         No Change for Staticroute LAN_Subnet 2.
+         No Change for NTP 17009000545.
+         No Change for Toolkit 171204945.
+         No Change for Application Probe default-probe-configuration-56545514008545.
+      No Change for Site UK_RemoteBranch state (active).
+      DONE
+      ```
 
 ## Caveats and Known Issues
 
@@ -62,7 +122,7 @@ When upgrading the utility:
 - Deletion of sites is irreversible and should be done with caution.
 - Certain operations have safety factors and may require additional steps.
 
-# Using the CI/CD Pipeline
+# Gitlab CI/CD Pipeline
 
 ## Purpose of the Pipeline
 
@@ -76,6 +136,46 @@ The CI/CD pipeline is designed to automate the process of generating, testing, a
 - Prisma SASE credentials with the necessary roles for SD-WAN management.
 - A GCP service account with read-only access to the required Google Sheets file and the associated JSON key file.
 
+## Importing the GitHub Repository to GitLab CI/CD
+
+In order to use this pipeline you must first import the repository into your GitLab environment. Please follow these steps to do so:
+
+1. **Create a New Project in GitLab**:
+   - Sign in to your GitLab account.
+   - Navigate to your dashboard and click on "New project".
+   - Choose "Import project" then select "Repo by URL".
+
+2. **Provide the Repository URL**:
+   - In the "Git repository URL" field, enter the following URL:
+     ```
+     https://github.com/baadrdeen/prisma_sase_config
+     ```
+   - Provide any additional details required by GitLab, such as the project name and visibility settings.
+
+3. **Start the Import**:
+   - Click on "Create project" to begin the import process.
+   - GitLab will clone the repository from the provided URL.
+
+4. **Verify the Import**:
+   - After the import is complete, you will be taken to the project page in GitLab.
+   - Check to ensure that the repository, including all branches and commit history, has been imported successfully.
+
+5. **Update Local Repository (if applicable)**:
+   - If you have a local clone of the repository and wish to push to GitLab, update the remote URL:
+     ```bash
+     git remote set-url origin <new-gitlab-repository-url>
+     ```
+   - Replace `<new-gitlab-repository-url>` with the actual URL of your new GitLab repository.
+
+6. **Set Environment Variables**:
+- Set up a new CI/CD environment named `production`.
+- Create protected environment variables linked to the `production` environment for Strata Cloud Manager authentication: `CLIENT_ID`, `CLIENT_SECRET`, `TSG_ID`, and `SITE_ID`.
+- Assign values to `CLIENT_ID`, `CLIENT_SECRET`, and `TSG_ID` using a service account to enable authentication with the Strata Cloud Manager API.
+
+For detailed instructions, refer to the GitLab documentation on [importing projects from other URLs](https://docs.gitlab.com/ee/user/project/import/repo_by_url.html).
+
+
+
 ## Pipeline Setup Procedure
 
 Before running the pipeline, you need to create a Jinja2 template for your branches and update the `Branch_Config_Maker.py` and `Validate_branch_info.py` scripts with the specific mapping information based on the structure of the spreadsheet on Google Sheets.
@@ -87,7 +187,7 @@ To create a Jinja2 template for your branches, follow these steps:
 1. **Execute the Pull Site Script**: Run the `pull_site` script on a branch that has already been created and configured, including the ION configurations. This will generate a YAML file with the current configuration of the site.
 
    ```bash
-   pull_site -S "ExistingBranchName" --output ExistingBranchConfig.yaml
+   $ python pull_site -S "ExistingBranchName" --output ExistingBranchConfig.yaml
    ```
 
 2. **Create the Jinja2 Template**: Use the generated YAML file as a starting point to create your Jinja2 template. Replace specific values with placeholders (e.g., `{{variable}}`) to make the template dynamic.
@@ -116,7 +216,7 @@ To create a Jinja2 template for your branches, follow these steps:
 
 3. **Customize the Template**: Continue to modify the rest of the template, adding variables and loops as needed to accommodate the dynamic aspects of your configuration.
 
-4. **Save the Template**: Once you have replaced all the necessary values with Jinja2 placeholders, save the file with a `.jinja2` extension (e.g., `template.jinja2`).
+4. **Save the Template**: Once you have replaced all the necessary values with Jinja2 placeholders, save the file as `template.jinja2` with a `.jinja2` extension.
 
 By following these steps, you will have a Jinja2 template that can be used to generate YAML configuration files for different branches with varying site information.
 
@@ -200,7 +300,13 @@ After setting up the Jinja2 template and updating the scripts with the correct m
 
 #### Method 1: Run Pipeline from the Pipeline Runner
 
-Trigger the pipeline manually from the GitLab UI by navigating to your project's CI/CD section and clicking "Run pipeline".
+To run the pipeline using a pipeline runner:
+
+1. **Set Up a Runner**: Ensure you have a GitLab runner set up and registered to your project. The runner will execute the jobs defined in the `.gitlab-ci.yml` file.
+
+2. **Trigger the Pipeline**: You can trigger the pipeline manually from the GitLab UI by navigating to your project's **Build > Pipelines** section and select the branch you want to run the pipeline on, and then click "Run pipeline". You'll receive a prompt to enter the site ID.
+
+3. **Approve deployment**: You will need to approve the deployment if the previous stages have been validated using the GUI.
 
 ### Method 2: Trigger Pipeline Using Postman and GitLab API
 
@@ -225,3 +331,34 @@ Here's an example of how the body data should be configured in Postman:
 - Key: `variables[SITE_ID]` | Value: `<your-site-id>`
 
 Remember to replace `<project-id>`, `<your-trigger-token>`, `<your-branch-name>`, and `<your-site-id>` with your actual project details and desired values. This setup will trigger the CI/CD pipeline for the specified branch and pass the `SITE_ID` as a variable to the pipeline, which can be used for deployment.
+
+## References
+
+For more information and further reading, please refer to the following resources:
+
+- [Google API Reference](https://github.com/googleapis/google-api-python-client)
+  - This reference provides detailed information about the Google API libraries and how to interact with Google services programmatically.
+
+- [Prisma SASE SDK Reference](https://github.com/PaloAltoNetworks/prisma-sase-sdk-python)
+  - The Prisma SASE SDK documentation offers comprehensive guides and API references to help developers integrate with the Prisma SASE platform.
+
+Ensure you review and understand the documentation provided by these resources to effectively utilize the APIs and SDKs in your project.
+
+
+## Disclaimer
+
+- This script comes with no warranty or support. Use it at your own risk.
+- Double-check your configuration and it's recommended to run simulate mode before running the script in deploy mode.
+- Review the pipeline and understand the implications before making changes to your Prisma paltform.
+
+## Author
+
+[Badr-eddine](https://www.linkedin.com/in/badreddine-aharchi)
+
+## Contributing
+
+Contributions are welcome! If you encounter any issues or have suggestions for improvements, please create an issue or submit a pull request.
+
+## License
+
+This project is licensed under the [MIT License](https://github.com/baadrdeen/prisma_sase_config/blob/main/LICENSE).
