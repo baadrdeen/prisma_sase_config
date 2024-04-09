@@ -1,0 +1,16 @@
+            {% for route in static_routes %}
+            {{ route.name }}:
+              address_family: ipv4
+              description:
+              destination_prefix: {{ route.destination_prefix }}
+              network_context_id:
+              nexthop_reachability_probe: false
+              nexthops:
+              - admin_distance: 1
+                nexthop_interface_id:
+                nexthop_ip: {{ route.nexthop_ip }}
+                self: true
+              scope: global
+              tags:
+              vrf_context_id: Global
+            {% endfor %}
