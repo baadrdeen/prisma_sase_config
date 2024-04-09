@@ -1,7 +1,6 @@
 import argparse
 from jinja2 import Template
-from google.oauth2.service_account import Credentials
-from googleapiclient.discovery import build
+import json
 
 def rm_spaces(string):
     """Remove white spaces from a string."""
@@ -11,38 +10,6 @@ def load_yaml_template(file_path):
     """Load YAML template from file."""
     with open(file_path, 'r') as file:
         return file.read()
-
-def get_site_info_from_google_sheets(site_id):
-    """Retrieve site information based on site_id from Google Sheets data."""
-    creds = None
-    # Load credentials from the service account key JSON file
-    creds = Credentials.from_service_account_file(
-        'GCP-API-key.json', scopes=SCOPES)
-
-    # Build the service
-    service = build('sheets', 'v4', credentials=creds)
-
-    # Call the Sheets API
-    sheet = service.spreadsheets()
-    result = sheet.values().get(spreadsheetId=SPREADSHEET_ID,
-                                range=RANGE_NAME).execute()
-    values = result.get('values', [])
-
-    if not values:
-        print('No data found.')
-        return None
-
-    # Assuming the second row is the header
-    headers = values[2]
-    # Convert rows to list of dicts
-    data = [dict(zip(headers, row)) for row in values[1:]]
-
-    # Find site information based on site_id
-    for site in data:
-        if site.get('Site_ID') == site_id:
-            return site
-    
-    return None  # Site ID not found
 
 def populate_yaml_data(site_info):
     """Populate data for rendering YAML template."""
@@ -73,18 +40,14 @@ if __name__ == "__main__":
     site_id = args.site_id
     yaml_template_path = "template.jinja2"
     output_filename = f"{site_id}_Branch_config.yml"
-    # The scope for the Sheets API
-    SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-    # The ID of your spreadsheet
-    SPREADSHEET_ID = 'Your SPREADSHEET_ID'
-    # The range of cells to read from.
-    RANGE_NAME = 'YOUR RANGE_NAME'
+    json_filename = f"{site_id}_site_info.json"
     
     # Load YAML template
     yaml_template = load_yaml_template(yaml_template_path)
     
-    # Get site information from Google Sheets
-    site_info = get_site_info_from_google_sheets(site_id)
+        # Read the JSON file
+    with open(json_filename, 'r') as json_file:
+        site_info = json.load(json_file)
     
     if site_info is not None:
         # Populate data for YAML template

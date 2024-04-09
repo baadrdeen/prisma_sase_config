@@ -1,0 +1,92 @@
+# Use the Python 3.9 Docker image as the base image for all jobs
+image: python:3.9
+
+# Define cache settings to speed up subsequent pipeline runs
+cache:
+  key: "$CI_COMMIT_REF_SLUG" # Cache key based on the Git branch name
+  paths:
+    - .cache/pip # Cache the pip download cache
+    - venv/ # Cache the Python virtual environment
+
+# Commands that run before each job's script
+before_script:
+  - python -m venv venv # Create a Python virtual environment
+  - source venv/bin/activate # Activate the virtual environment
+  - pip install --cache-dir .cache/pip -r requirements.txt # Install dependencies from requirements.txt using the cache
+
+# Define the stages of the pipeline in the order they will run
+stages:
+  - validate_branch_info
+  - generate_branch_config
+  - test_yaml_config
+  - deploy
+
+# Define variables that can be used throughout the pipeline
+variables:
+  SITE_ID:
+    value: "Default" # Default value for SITE_ID
+    description: "The Branch Site ID" # Description of the SITE_ID variable
+
+### Job to Validate branch information
+validate_branch_info:
+  stage: validate_branch_info # Associate this job with the validate_branch_info stage
+  script:
+    - echo "Validate Branch information for SITE_ID=${SITE_ID}" # Log message
+    - python Validate_branch_info.py "$SITE_ID" # Run the validation script with SITE_ID
+  only:
+    - dev # Only run this job for the dev branch
+  environment:
+    name: production # Set the environment
+  artifacts:
+    paths:
+      - ${SITE_ID}_site_info.json # Define the artifact to pass to subsequent stages
+    expire_in: 1 hour # Set the artifact expiration time
+
+### Job to generate a site template
+generate_branch_config:
+  stage: generate_branch_config # Associate this job with the generate_branch_config stage
+  script:
+    - echo "Generating site template for SITE_ID=${SITE_ID}" # Log message
+    - python Branch_Config_Maker.py "$SITE_ID" # Run the template maker script with SITE_ID
+  only:
+    - dev # Only run this job for the dev branch
+  environment:
+    name: production # Set the environment
+  artifacts:
+    paths:
+      - ${SITE_ID}_Branch_config.yml # Define the artifact to pass to subsequent stages
+    expire_in: 24 hour # Set the artifact expiration time
+  needs:
+    - validate_branch_info
+
+### Job to test_yaml_config whether the config file was generated successfully
+test_yaml_config:
+  stage: test_yaml_config # Associate this job with the test_yaml_config stage
+  script:
+    - echo "Verifying if the template has been generated..." # Log message
+    - if [ -f ${SITE_ID}_Branch_config.yml ]; then echo "Template exists."; else echo "Template does not exist." && exit 1; fi # Check for the template file and exit with an error if not found
+  environment:
+    name: production # Set the environment
+  needs:
+    - generate_branch_config # Specify that this job needs the generate_branch_config job to run first
+
+### Job to deploy the site using the generated template
+deploy:
+  stage: deploy # Associate this job with the deploy stage
+  script:
+    - echo "Deploying using template for SITE_ID=${SITE_ID}" # Log message
+    - export CLIENT_ID=$PRISMA_SASE_CLIENT_ID # Set the CLIENT_ID environment variable
+    - export CLIENT_SECRET=$PRISMA_SASE_CLIENT_SECRET # Set the CLIENT_SECRET environment variable
+    - export TSG_ID=$PRISMA_SASE_TSG_ID # Set the TSG_ID environment variable
+    - python do_site.py ${SITE_ID}_Branch_config.yml # Run the deployment script with the template file
+  environment:
+    name: production # Set the environment
+  only:
+    - dev # Only run this job for the dev branch
+  when: manual # This job requires manual intervention to run
+  needs:
+    - validate_branch_info # Specify that this job needs the validate_branch_info job to run
+    - generate_branch_config # Specify that this job needs the generate_branch_config job to run
+    - test_yaml_config # Also specify that this job needs the test_yaml_config job to run
+  allow_failure: false # Do not allow this job to fail
+  # This job will only be executed if the previous stages are successful.
